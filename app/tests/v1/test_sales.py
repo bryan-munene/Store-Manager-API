@@ -1,9 +1,11 @@
 import pytest
 from flask import json
 from app import create_app
+from app.api.v1.views.items import Items
 from app.api.v1.views.sales import Sales
 
 
+testitems = Items()
 testsales = Sales()
 app = create_app(config="testing")
 

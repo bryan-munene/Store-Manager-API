@@ -8,24 +8,32 @@ app = create_app(config="testing")
 
 
 sample_item=[
-    {"name":"Hamburger", "price":"abc",	"image":"image"},
-    {"name":"Hamburger", "price":"-200",	"image":"image"},
-    {"name":"123", "price":"200",	"image":"image"},
-    {"name":"", "price":"200",	"image":"image"},
-    {"name":"Hamburger", "price":"",	"image":"image"},
-    {"name":"Hamburger", "price":"200",	"image":""},
-    {"name":"Hamburger", "price":"200",	"image":"image"}
+    {"name":"Panadol", "price":"abc",	"image":"image", "quantity":"12"},
+    {"name":"Panadol", "price":"-200",	"image":"image", "quantity":"12"},
+    {"name":"123", "price":"200",	"image":"image", "quantity":"12"},
+    {"name":"", "price":"200",	"image":"image", "quantity":"12"},
+    {"name":"Panadol", "price":"",	"image":"image", "quantity":"12"},
+    {"name":"Panadol", "price":"200",	"image":"", "quantity":"12"},
+    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"abc"},
+    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"-12"},
+    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"12"}
 ]
 
 
 sample_item_updates=[
-    {"price":"300",	"image":"image1"},
-    {"price":"-300",	"image":"image1"},
-    {"price":"abc",	"image":"image1"},
-    {"price":"300",	"image":""},
-    {"price":"",	"image":"image1"},
-    {"price":"300",	"image":"image1"},
-    {"price":"",	"image":""}
+    {"name":"Panadol", "price":"300",	"image":"image1", "quantity":"15"},
+    {"name":"Panadol", "price":"-300",	"image":"image1", "quantity":"15"},
+    {"name":"Panadol", "price":"abc",	"image":"image1", "quantity":"15"},
+    {"name":"123", "price":"300",	"image":"image1", "quantity":"15"},
+    {"name":"", "price":"300",	"image":"image1", "quantity":"15"},
+    {"name":"Panadol", "price":"300",	"image":"image1", "quantity":"abc"},
+    {"name":"Panadol", "price":"300",	"image":"image1", "quantity":"-15"},
+    {"name":"", "price":"",	"image":"", "quantity":""},
+    {"name":"Panadol", "price":"300",	"image":"image", "quantity":"12"},
+    {"name":"Panadol Advance", "price":"200",	"image":"image", "quantity":"12"},
+    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"15"},
+    {"name":"Panadol", "price":"200",	"image":"image1", "quantity":"12"},
+    {"name":"Panadol Advance", "price":"300",	"image":"image1", "quantity":"15"}
 ]
 
 
@@ -76,9 +84,19 @@ def test_items_image_empty():
     response= test_client.post('/api/v1/add_item', data=sample_item[5] ,content_type='application/json')
     assert(response.status_code==400)
 
+def test_items_quantity_not_digit():
+    test_client=app.test_client()
+    response= test_client.post('/api/v1/add_item', data=sample_item[6] ,content_type='application/json')
+    assert(response.status_code==400)
+
+def test_items_quantity_not_digit1():
+    test_client=app.test_client()
+    response= test_client.post('/api/v1/add_item', data=sample_item[7] ,content_type='application/json')
+    assert(response.status_code==400)
+
 def test_items_successfully():
     test_client=app.test_client()
-    response= test_client.post('/api/v1/add_item', data=json.dumps(sample_item[6]) ,content_type='application/json')
+    response= test_client.post('/api/v1/add_item', data=json.dumps(sample_item[8]) ,content_type='application/json')
     json.loads(response.data)
     assert(response.status_code==201)
 
@@ -122,21 +140,55 @@ def test_items_update_price_not_digit1():
     test_client=app.test_client()
     response= test_client.put('/api/v1/items/1', data=sample_item_updates[2] ,content_type='application/json')
     assert(response.status_code==400)
-
-def test_update_item_none():
+    
+def test_items_update_item_name_not_str():
     test_client=app.test_client()
-    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[6]) ,content_type='application/json')
-    assert(response.status_code==406)
+    response= test_client.put('/api/v1/add_item', data=sample_item_updates[3] ,content_type='application/json')
+    assert(response.status_code==405)
+
+def test_items_update_item_name_empty():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=sample_item_updates[4] ,content_type='application/json')
+    assert(response.status_code==400)
+
+def test_items_update_quantity_not_digit():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/add_item', data=sample_item_updates[5] ,content_type='application/json')
+    assert(response.status_code==405)
+
+def test_items_update_quantity_not_digit1():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=sample_item_updates[6] ,content_type='application/json')
+    assert(response.status_code==400)
+
+def test_update_item_empty():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[7]) ,content_type='application/json')
+    assert(response.status_code==403)
 
 def test_update_item_price_only_successfully():
     test_client=app.test_client()
-    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[3]) ,content_type='application/json')
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[8]) ,content_type='application/json')
     assert(response.status_code==200)
 
-
-def test_update_item_both_successfully():
+def test_update_item_name_only_successfully():
     test_client=app.test_client()
-    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[5]) ,content_type='application/json')
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[9]) ,content_type='application/json')
+    assert(response.status_code==200)
+
+def test_update_item_quantity_only_successfully():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[10]) ,content_type='application/json')
+    assert(response.status_code==200)
+
+def test_update_item_image_only_successfully():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[11]) ,content_type='application/json')
+    assert(response.status_code==200)
+
+def test_update_item_all_successfully():
+    test_client=app.test_client()
+    response= test_client.put('/api/v1/items/1', data=json.dumps(sample_item_updates[12]) ,content_type='application/json')
     assert(response.status_code==200)
 
 '''-------------------------------------------------------------------------------------------------------------------------------'''

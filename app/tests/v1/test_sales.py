@@ -15,11 +15,11 @@ sample_sale=[{
             "payment_mode":"Cash",
             "sale_items": [
     	                    {
-    		                "item_name":"Hamburger",
+    		                "item_name":"Panadol",
     		                "quantity":"abc"
     	                    },
     	                    {
-    		                "item_name":"pizza",
+    		                "item_name":"Amoxil",
     		                "quantity":"def"
     	                    }
                            ]
@@ -54,11 +54,11 @@ sample_sale=[{
             "payment_mode":"Cash",
             "sale_items": [
     	                    {
-    		                "item_name":"Hamburger",
+    		                "item_name":"Panadol",
     		                "quantity":""
     	                    },
     	                    {
-    		                "item_name":"pizza",
+    		                "item_name":"Amoxil",
     		                "quantity":""
     	                    }
                            ]
@@ -67,11 +67,11 @@ sample_sale=[{
             "payment_mode":"Cash",
             "sale_items": [
     	                    {
-    		                "item_name":"Hamburger",
+    		                "item_name":"Panadol",
     		                "quantity":"4"
     	                    },
     	                    {
-    		                "item_name":"pizza",
+    		                "item_name":"Amoxil",
     		                "quantity":"9"
     	                    }
                            ]
@@ -80,11 +80,11 @@ sample_sale=[{
             "payment_mode":"",
             "sale_items": [
     	                    {
-    		                "item_name":"Hamburger",
+    		                "item_name":"Panadol",
     		                "quantity":"4"
     	                    },
     	                    {
-    		                "item_name":"pizza",
+    		                "item_name":"Amoxil",
     		                "quantity":"9"
     	                    }
                            ]
@@ -97,11 +97,11 @@ sample_sale=[{
             "payment_mode":"Cash",
             "sale_items": [
     	                    {
-    		                "item_name":"Hamburger",
+    		                "item_name":"Panadol",
     		                "quantity":"4"
     	                    },
     	                    {
-    		                "item_name":"pizza",
+    		                "item_name":"Amoxil",
     		                "quantity":"9"
     	                    }
                            ]

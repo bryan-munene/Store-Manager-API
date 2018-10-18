@@ -68,11 +68,11 @@ sample_sale=[{
             "sale_items": [
     	                    {
     		                "item_name":"Panadol",
-    		                "quantity":"4"
+    		                "quantity":"40"
     	                    },
     	                    {
     		                "item_name":"Amoxil",
-    		                "quantity":"9"
+    		                "quantity":"90"
     	                    }
                            ]
             },
@@ -148,7 +148,13 @@ def test_sales_quantity_empty():
     test_client = app.test_client()
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[3]) ,content_type='application/json')
     assert(response.status_code==400)
-        
+
+
+def test_sales_quantity_more_than_available_stock():
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[3]) ,content_type='application/json')
+    assert(response.status_code==400)
+     
 
 def test_sales_payment_method_empty():
     test_client = app.test_client()

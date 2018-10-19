@@ -15,7 +15,10 @@ class Sales(object):
 
         if not request.is_json:
             return make_response(
-                jsonify({"status": "wrong format", "message": "request not json"}), 400)
+                jsonify({
+                    "status": "wrong format", 
+                    "message": "request not json"
+                    }), 400)
         else:
             data = request.get_json()
             sale_id = len(sales) + 1
@@ -23,8 +26,10 @@ class Sales(object):
             ordered_items = data['sale_items']
 
         if payment_mode == "":
-            return make_response(jsonify(
-                {"status": "not acceptable", "message": "Please fill all the required fields"}), 406)
+            return make_response(jsonify({
+                "status": "not acceptable", 
+                "message": "Please fill all the required fields"
+                }), 406)
 
         else:
             if not len(ordered_items) == 0:
@@ -35,18 +40,28 @@ class Sales(object):
                     sale_item_id = len(sale_items) + 1
 
                     if quantity == "":
-                        make_response(jsonify(
-                            {"status": "not acceptable", "message": "Please fill all the required fields"}), 406)
+                        make_response(jsonify({
+                            "status": "not acceptable", 
+                            "message": "Please fill all the required fields"
+                            }), 406)
+
                     if item_id == "":
-                        make_response(jsonify(
-                            {"status": "not acceptable", "message": "Please fill all the required fields"}), 406)
+                        make_response(jsonify({
+                            "status": "not acceptable", 
+                            "message": "Please fill all the required fields"
+                            }), 406)
 
                     if not quantity.isdigit():
-                        return make_response(
-                            jsonify({"status": "not acceptable", "message": "Quantity is not valid"}), 400)
+                        return make_response(jsonify({
+                            "status": "not acceptable", 
+                            "message": "Quantity is not valid"
+                            }), 400)
+
                     if not item_id.isdigit():
-                        return make_response(
-                            jsonify({"status": "not acceptable", "message": "Food id is not valid"}), 400)
+                        return make_response(jsonify({
+                            "status": "not acceptable", 
+                            "message": "Food id is not valid"
+                            }), 400)
 
                     '''
                     for item in items:
@@ -104,22 +119,32 @@ class Sales(object):
 
                 sales.append(sale)
 
-                return make_response(jsonify(
-                    {"status": "created", "sales": sales, "sale_items": sale_items, "sale": sale}), 201)
+                return make_response(jsonify({
+                    "status": "created", 
+                    "sales": sales, 
+                    "sale_items": sale_items, 
+                    "sale": sale
+                    }), 201)
             else:
-                return make_response(jsonify(
-                    {"status": "not acceptable", "message": "You must order atleast one item"}), 406)
+                return make_response(jsonify({
+                    "status": "not acceptable", 
+                    "message": "You must order atleast one item"
+                    }), 406)
 
     @sales_bp.route("/sales", methods=["GET"])
     def sales_all():
 
         if len(sales) == 0:
-            return make_response(
-                jsonify({"status": "not found", "message": "sales don't exist"}), 404)
+            return make_response(jsonify({
+                "status": "not found", 
+                "message": "sales don't exist"
+                }), 404)
 
         else:
-            return make_response(
-                jsonify({"status": "ok", "sales": sales}), 200)
+            return make_response(jsonify({
+                "status": "ok", 
+                "sales": sales
+                }), 200)
 
     @sales_bp.route('/orders/<int:sale_id>', methods=['GET'])
     def specific_sale(sale_id):
@@ -127,8 +152,13 @@ class Sales(object):
         sale = [sale for sale in sales if sale.get('sale_id') == sale_id]
 
         if len(sale) == 0:
-            return make_response(jsonify(
-                {"status": "not found", "message": "sale you are looking for does not exist"}), 404)
+            return make_response(jsonify({
+                "status": "not found", 
+                "message": "sale you are looking for does not exist"
+                }), 404)
 
         else:
-            return make_response(jsonify({"status": "ok", "sale": sale}), 200)
+            return make_response(jsonify({
+                "status": "ok", 
+                "sale": sale
+                }), 200)

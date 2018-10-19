@@ -65,7 +65,7 @@ class Items(object):
             
                 
     
-    @items_bp.route("/api/v1/items", methods=["GET"])
+    @items_bp.route("/items", methods=["GET"])
     def items_all():
         if len(items) == 0:
             return make_response(jsonify({"status":"not found","message":"items you are looking for does not esxist"}),404)
@@ -74,7 +74,7 @@ class Items(object):
 
 
     
-    @items_bp.route('/api/v1/items/<int:item_id>', methods=['GET'])
+    @items_bp.route('/items/<int:item_id>', methods=['GET'])
     def specific_item(item_id):        
         if len(items) != 0:
             for item in items:

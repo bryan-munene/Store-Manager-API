@@ -13,6 +13,6 @@ script:
 
 after_success:
   - coveralls
-  
+  - CODECOV_TOKEN = "51d78f94-50db-4bce-8629-2b1596076899"
 cache: 
     - pip

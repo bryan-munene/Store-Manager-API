@@ -2,6 +2,8 @@
 
 ![license](https://img.shields.io/github/license/mashape/apistatus.svg)
 
+[![PEP8](https://img.shields.io/badge/code%20style-pep8-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+
 [![Coverage Status](https://coveralls.io/repos/github/bryan-munene/Store-Manager-API/badge.svg)](https://coveralls.io/github/bryan-munene/Store-Manager-API)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/67a0efd8529d6bcc1c6e/maintainability)](https://codeclimate.com/github/bryan-munene/Store-Manager-API/maintainability)

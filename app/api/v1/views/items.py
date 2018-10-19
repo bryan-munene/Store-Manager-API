@@ -1,8 +1,66 @@
-from flask import Flask, Blueprint
+from flask import Blueprint, request, jsonify, make_response
+from flask_restful import Resource, Api
 
 
-items = Blueprint('items', __name__,url_prefix='/api/v1')
 
-
+items_bp = Blueprint('items', __name__, url_prefix='/api/v1')
+items = []
 class Items(object):
-    pass
+    @items_bp.route('/add_item', methods=["POST"])
+    def add_items():
+        
+        if not request.is_json:
+            return make_response(jsonify({"status":"wrong format","messenge":"request not json"}),400)
+        else:
+            data = request.get_json() 
+            item_id =  len(items)+1
+            name = data['name']
+            price = data['price']
+            image = data['image']
+            quantity = data['quantity']
+            
+        if name == "" or price == "" or image == "" or quantity =="":
+            return make_response(jsonify({"status":"not acceptable","message":"all fields must be filled"}),406)
+
+        if not price.isdigit():
+            return make_response(jsonify({"status":"not acceptable","message":"price not valid"}),405)
+
+        if not name.isalpha():
+            return make_response(jsonify({"status":"not acceptable","message":"item name not valid"}),405)
+
+        
+        
+
+        if len(items) > 0:
+            for item in items:
+                item_name = item.get('name')
+                item_price = item.get('price')
+                
+            if name == item_name and price == item_price:
+                return make_response(jsonify({"status":"forbidden","message":"item already exists"}),403)
+           
+            else:#if the food does not exist add the new food item
+                item = {
+                    "item_id":item_id,
+                    "name":name,
+                    "price":price,   
+                    "image":image,
+                    "quantity":quantity
+                    }
+
+                
+                
+        else:#if the list of foods is empty add the new food item
+            item = {
+                    "item_id":item_id,
+                    "name":name,
+                    "price":price,   
+                    "image":image,
+                    "quantity":quantity
+                    }
+
+        items.append(item)
+
+        return make_response(jsonify({"status":"created", "item":item, "items":items }),201)
+            
+                

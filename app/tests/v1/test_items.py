@@ -5,7 +5,9 @@ from app.api.v1.views.items import Items
 from app.tests import add_items_helper
 
 testitems = Items()
-app = create_app(config="testing")
+
+config = "testing"
+app = create_app(config)
 
 
 sample_item=[

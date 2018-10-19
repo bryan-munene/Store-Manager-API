@@ -71,3 +71,21 @@ class Items(object):
             return make_response(jsonify({"status":"not found","message":"items you are looking for does not esxist"}),404)
         else:
             return make_response(jsonify({"status":"ok", "items":items}),200)
+
+
+    
+    @items_bp.route('/api/v1/items/<int:item_id>', methods=['GET'])
+    def specific_item(item_id):        
+        if len(items) != 0:
+            for item in items:
+                id = item.get('item_id')
+                if id == item_id:
+                    return make_response(jsonify({"status":"ok", "items":items}),200)
+                else:
+                    return make_response(jsonify({'error':'the item does not exist'}),404)
+
+        
+
+        else:
+            return make_response(jsonify({'error':'the item does not exist'}),404)
+

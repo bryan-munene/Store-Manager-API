@@ -31,6 +31,7 @@ def add_items_helper(test_client):
 
 def make_sale_helper(test_client):
     add_items_helper(test_client)
-    make_sale = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
-    assert(make_sale.status_code==201)
+    response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
+    json.loads(response.data)
+    assert(response.status_code==201)
     

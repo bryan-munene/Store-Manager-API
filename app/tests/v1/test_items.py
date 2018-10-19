@@ -57,7 +57,7 @@ def test_items_retrive_all_successfully():
     test_client=app.test_client()
     add_items_helper(test_client)
     response= test_client.get('/api/v1/items',content_type='application/json')
-    assert(response.status_code==404)
+    assert(response.status_code==200)
 
 '''-------------------------------------------------------------------------------------------------------------------------------'''
 
@@ -117,19 +117,19 @@ def test_items_successfully():
 
 def test_get_item_negative_identifier():
     test_client=app.test_client()
-    add_items_helper(test_client)
+    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/-1' ,content_type='application/json')
     assert(response.status_code == 404)
 
 def test_get_item_not_created():
     test_client=app.test_client()
-    add_items_helper(test_client)
+    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/100' ,content_type='application/json')
     assert(response.status_code == 404)
 
 def test_get_item_successfully():
     test_client=app.test_client()
-    add_items_helper(test_client)
+    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/1' ,content_type='application/json')
     assert(response.status_code == 200)
 

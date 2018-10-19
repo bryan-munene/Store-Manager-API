@@ -149,7 +149,7 @@ This app contains multiple versions.
 
 
 
-#Documentation
+# Documentation
 
 Coming soon...
 
@@ -161,7 +161,7 @@ Coming soon...
 
 ## Authors
 
-* **Muthuri Munene Bryan** -  - [bryan-munene](https://github.com/bryan-munene)
+* - [Muthuri Munene Bryan](https://github.com/bryan-munene)
 
 
 ## License

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api
-from .items import items
+from .items import Items
+
+items_find = Items()
 
 sales_bp = Blueprint('sales', __name__,url_prefix='/api/v1')
 
@@ -30,39 +31,51 @@ class Sales(object):
         else:
             if not len(ordered_items) == 0:
                 for ordered_item in ordered_items:
-                    item_name = ordered_item.get('item_name')
+                    item_id = ordered_item.get('item_id')
                     quantity = ordered_item.get('quantity')
                     
                     sale_item_id =  len(sale_items)+1
                     
                     if quantity == "":
                         make_response(jsonify({"status":"not acceptable", "message":"Please fill all the required fields"}),406)
-                    if item_name == "":
+                    if item_id == "":
                         make_response(jsonify({"status":"not acceptable", "message":"Please fill all the required fields"}),406)
                     
                     if not quantity.isdigit():
                         return make_response(jsonify({"status":"not acceptable", "message":"Quantity is not valid"}),400)
-                    if not item_name.isalpha():
-                        return make_response(jsonify({"status":"not acceptable", "message":"Food name is not valid"}),400)
+                    if not item_id.isdigit():
+                        return make_response(jsonify({"status":"not acceptable", "message":"Food id is not valid"}),400)
                         
 
+                    '''     
                     for item in items:
                         name = item.get('name')
                         price = item.get('price')
+                    '''
+                    print (item_id)
+                    items = items_find.get_item(item_id)
 
-                        if item_name == name:
-                            total = int(quantity) * int(price)
-                            sale_item = {
-                                "sale_item_id":sale_item_id,
-                                "sale_id":sale_id,
-                                "item_name":item_name,
-                                "quantity":quantity,
-                                "price":price,
-                                "total":total
-                                }
-                            
+                    if not items:
+                        return make_response(jsonify({'error':'the item does not exist'}),404)
+                    else:
+                        id = items['item_id']
+                        price = items['price']
 
-                            sale_items.append(sale_item)
+
+
+                    if item_id == id:
+                        total = int(quantity) * int(price)
+                        sale_item = {
+                            "sale_item_id":sale_item_id,
+                            "sale_id":sale_id,
+                            "item_id":item_id,
+                            "quantity":quantity,
+                            "price":price,
+                            "total":total
+                            }
+                        
+
+                        sale_items.append(sale_item)
 
                     grand = 0
                     items = 0

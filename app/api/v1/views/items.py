@@ -18,9 +18,9 @@ class Items(object):
         if not request.is_json:
             return make_response(
                 jsonify({
-                    "status": "wrong format", 
+                    "status": "wrong format",
                     "messenge": "request not json"
-                    }), 400)
+                }), 400)
         else:
             data = request.get_json()
             item_id = len(items) + 1
@@ -31,23 +31,23 @@ class Items(object):
 
         if name == "" or price == "" or image == "" or quantity == "":
             return make_response(jsonify({
-                "status": "not acceptable", 
+                "status": "not acceptable",
                 "message": "all fields must be filled"
-                }), 406)
+            }), 406)
 
         if not price.isdigit():
             return make_response(
                 jsonify({
-                    "status": "not acceptable", 
+                    "status": "not acceptable",
                     "message": "price not valid"
-                    }), 405)
+                }), 405)
 
         if not name.isalpha():
             return make_response(
                 jsonify({
-                    "status": "not acceptable", 
+                    "status": "not acceptable",
                     "message": "item name not valid"
-                    }), 405)
+                }), 405)
 
         if len(items) > 0:
             for item in items:
@@ -57,9 +57,9 @@ class Items(object):
             if name == item_name and price == item_price:
                 return make_response(
                     jsonify({
-                        "status": "forbidden", 
+                        "status": "forbidden",
                         "message": "item already exists"
-                        }), 403)
+                    }), 403)
 
             else:
                 item = {
@@ -83,24 +83,24 @@ class Items(object):
 
         return make_response(
             jsonify({
-                "status": "created", 
-                "item": item, 
+                "status": "created",
+                "item": item,
                 "items": items
-                }), 201)
+            }), 201)
 
     @items_bp.route("/items", methods=["GET"])
     def items_all():
         if len(items) == 0:
             return make_response(jsonify({
-                "status": "not found", 
+                "status": "not found",
                 "message": "items you are looking for does not esxist"
-                }), 404)
+            }), 404)
         else:
             return make_response(
                 jsonify({
-                    "status": "ok", 
+                    "status": "ok",
                     "items": items
-                    }), 200)
+                }), 200)
 
     @items_bp.route('/items/<int:item_id>', methods=['GET'])
     def specific_item(item_id):
@@ -110,20 +110,20 @@ class Items(object):
                 while id == item_id:
                     return make_response(
                         jsonify({
-                            "status": "ok", 
+                            "status": "ok",
                             "item": item
-                            }), 200)
+                        }), 200)
             else:
                 return make_response(
                     jsonify({
                         'error': 'the item does not exist'
-                        }), 404)
+                    }), 404)
 
         else:
             return make_response(
                 jsonify({
                     'error': 'the item does not exist'
-                    }), 404)
+                }), 404)
 
 
 class gets(object):

@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask_restful import Resource, Api
+from .items import items
 
 sales_bp = Blueprint('sales', __name__,url_prefix='/api/v1')
 
@@ -17,7 +18,7 @@ class Sales(object):
             data = request.get_json() 
             sale_id =  len(sales)+1
             payment_mode = data['payment_mode']
-            ordered_items = data['order_items']
+            ordered_items = data['sale_items']
             
             
 
@@ -77,8 +78,6 @@ class Sales(object):
                 sale = {
                     "sale_id":sale_id,
                     "payment_mode":payment_mode,
-                    "completed_status":False,
-                    "accepted_status":None,
                     "grand_total":grand,
                     "number_of_items":items
                     }
@@ -99,4 +98,16 @@ class Sales(object):
         else:
             return make_response(jsonify({"status":"ok", "sales":sales}),200)
         
+
+    @sales_bp.route('/orders/<int:sale_id>', methods=['GET'])
+    def specific_sale(sale_id):
+        
+        sale = [sale for sale in sales if sale.get('sale_id') == sale_id]
+        
+        
+        if len(sale) == 0:
+            return make_response(jsonify({"status":"not found","message":"sale you are looking for does not exist"}),404)
+                   
+        else:
+            return make_response(jsonify({"status":"ok", "sale":sale}),200)
 

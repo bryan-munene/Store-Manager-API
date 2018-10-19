@@ -39,7 +39,7 @@ class Items(object):
             if name == item_name and price == item_price:
                 return make_response(jsonify({"status":"forbidden","message":"item already exists"}),403)
            
-            else:#if the food does not exist add the new food item
+            else:
                 item = {
                     "item_id":item_id,
                     "name":name,
@@ -50,7 +50,7 @@ class Items(object):
 
                 
                 
-        else:#if the list of foods is empty add the new food item
+        else:
             item = {
                     "item_id":item_id,
                     "name":name,
@@ -64,3 +64,10 @@ class Items(object):
         return make_response(jsonify({"status":"created", "item":item, "items":items }),201)
             
                 
+    
+    @items_bp.route("/api/v1/items", methods=["GET"])
+    def items_all():
+        if len(items) == 0:
+            return make_response(jsonify({"status":"not found","message":"items you are looking for does not esxist"}),404)
+        else:
+            return make_response(jsonify({"status":"ok", "items":items}),200)

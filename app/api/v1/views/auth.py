@@ -123,12 +123,10 @@ class Users(object):
 
     @users_bp.route("/logout")
     def logout():
-        if session.get('logged_in'):
+        if session.get('logged_in') or session.get('logged_in_admin'):
             session['logged_in'] = False
-            return Users.home()
-        elif session.get('logged_in_admin'):
             session['logged_in_admin'] = False
-            return Users.home()
+            return make_response(jsonify({"status":"okay","messenge":"user logged out"}),200)
+
         else:
             return make_response(jsonify({"status":"okay","messenge":"logged out already"}),400)
-

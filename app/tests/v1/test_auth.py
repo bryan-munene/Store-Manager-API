@@ -167,15 +167,9 @@ def test_login_wrong_email():
 
 #CORRECT CREDENTIALS
 
-def test_login_correct_data_admin():
+def test_login_correct_data():
     test_client = app.test_client()
     response = test_client.post('/api/v1/login', data = json.dumps(sample_login[6]), content_type = 'application/json')
-    json.loads(response.data.decode('utf-8'))
-    assert(response.status_code == 200)
-
-def test_login_correct_data_user():
-    test_client = app.test_client()
-    response = test_client.post('/api/v1/login', data = json.dumps(sample_login[7]), content_type = 'application/json')
     json.loads(response.data.decode('utf-8'))
     assert(response.status_code == 200)
 
@@ -187,7 +181,7 @@ def test_login_correct_data_user():
 def test_register_without_admin_logged_in():
     test_client = app.test_client()
     response = test_client.post('/api/v1/register', data = sample_registration[9], content_type = 'application/json')
-    assert(response.status_code == 400)
+    assert(response.status_code == 401)
 
 
 #USER INPUT CHECKS
@@ -267,7 +261,7 @@ def test_register_correct_data():
 
 def test_register_duplicate_input():
     test_client = app.test_client()
-    sign_up_helper(test_client)
+    sign_in_admin_helper(test_client)
     response = test_client.post('/api/v1/register', data = sample_registration[9], content_type = 'application/json')
     assert (response.status_code == 400)
 
@@ -275,14 +269,13 @@ def test_register_duplicate_input():
 
 #LOGOUT TESTS
 
-def test_logout_without_logged_in():
-    test_client=app.test_client()
-    response= test_client.get('/api/v1/logout', content_type = 'application/json')
-    assert(response.status_code == 400)
-
 def test_logout_correctly():
     test_client=app.test_client()
     sign_in_admin_helper(test_client)
     response= test_client.get('/api/v1/logout', content_type = 'application/json')
     assert(response.status_code == 200)
 
+def test_logout_without_logged_in():
+    test_client=app.test_client()
+    response= test_client.get('/api/v1/logout', content_type = 'application/json')
+    assert(response.status_code == 400)

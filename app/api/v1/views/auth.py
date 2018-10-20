@@ -19,9 +19,9 @@ class Users(object):
     @users_bp.route("/login")
     def home():
         if session.get('logged_in'):
-            return make_response(jsonify({"status":"user logged in", "id":session['user_id'], "login":True}, ),200)
+            return make_response(jsonify({"status":"user logged in", "username":session['username'], "login":True}, ),200)
         elif session.get('logged_in_admin'):
-            return make_response(jsonify({"status":"admin logged in", "login":True}, ),200)
+            return make_response(jsonify({"status":"admin logged in", "username":session['username'], "login":True}, ),200)
         else:
             return make_response(jsonify({"status":"login error", "login":False}),401)
      
@@ -55,3 +55,21 @@ class Users(object):
             
         return Users.home()
 
+
+    @users_bp.route("/register", methods=["POST"])
+    def register():
+        if not session.get('logged_in_admin'):
+            return make_response(jsonify({"status":"unauthorised", "message":"Admin User must be logged in"}),401)
+            
+        if not request.is_json:
+            return make_response(jsonify({"status":"wrong format","messenge":"request not json"}),400)
+        else:
+            data = request.get_json() 
+            user_id =  len(users)+1
+            name = data['name']
+            email = data['email']
+            username = data['username']
+            password = data['password']
+            password2 = data['password2']
+
+        

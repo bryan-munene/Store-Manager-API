@@ -84,6 +84,3 @@ def make_sale_helper(test_client):
     add_items_helper(test_client)
     sell = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
     assert(sell.status_code==201)
-    
-def yield_test_client(test_client):
-    yield test_client

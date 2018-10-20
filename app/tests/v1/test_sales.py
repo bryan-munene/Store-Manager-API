@@ -121,17 +121,14 @@ def test_sales_retrive_all_no_sale():
     sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales',content_type='application/json')
     assert(response.status_code==404)
-    yield_test_client(test_client)
-
+    
 
 def test_sales_retrive_all_successfully():
     test_client = app.test_client()
     make_sale_helper(test_client)
-    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales',content_type='application/json')
     assert(response.status_code==200)
-    yield_test_client(test_client)
-
+    
 '''-------------------------------------------------------------------------------------------------------------------------------'''
 
 #MAKE A SALE TESTS

@@ -1,5 +1,8 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, session
 from .items import gets
+from .auth import Users
+
+auth = Users()
 
 items_find = gets()
 
@@ -12,6 +15,11 @@ sale_items = []
 class Sales(object):
     @sales_bp.route("/make_sale", methods=["POST"])
     def make_sale():
+        if not session.get('logged_in'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
 
         if not request.is_json:
             return make_response(
@@ -75,29 +83,42 @@ class Sales(object):
                         # "item":item}),200)
 
                         id = item.get('item_id')
-                        # return make_response(jsonify({"status":"ok",
-                        # "item":item_id}),200)
+                        
 
-                        if not id == int(item_id):
+                        if int(id) == int(item_id):
                             # return make_response(jsonify({"status":"ok",
                             # "item":item, "item_id":item_id, "id":id}),200)
 
                             name = item.get('name')
                             price = item.get('price')
+                            stock_level = item.get('quantity')
 
-                            total = int(quantity) * int(price)
+                            if int(stock_level) > int(quantity):
 
-                            sale_item = {
-                                "sale_item_id": sale_item_id,
-                                "sale_id": sale_id,
-                                "item_id": item_id,
-                                "item_name": name,
-                                "quantity": quantity,
-                                "price": price,
-                                "total": total
-                            }
+                                total = int(quantity) * int(price)
 
-                            sale_items.append(sale_item)
+                                sale_item = {
+                                    "sale_item_id": sale_item_id,
+                                    "sale_id": sale_id,
+                                    "item_id": item_id,
+                                    "item_name": name,
+                                    "quantity": quantity,
+                                    "price": price,
+                                    "total": total
+                                }
+
+                                sale_items.append(sale_item)
+
+                                stock_level = int(stock_level) - int(quantity)
+
+                                item['quantity'] = stock_level
+                            
+                            else:
+                                return make_response(jsonify({
+                                    "status": "not acceptable", 
+                                    "message": "Stock levels not enough"
+                                    }), 406)
+
 
                     grand = 0
                     items = 0
@@ -133,6 +154,11 @@ class Sales(object):
 
     @sales_bp.route("/sales", methods=["GET"])
     def sales_all():
+        if not session.get('logged_in_admin'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
 
         if len(sales) == 0:
             return make_response(jsonify({
@@ -148,6 +174,11 @@ class Sales(object):
 
     @sales_bp.route('/orders/<int:sale_id>', methods=['GET'])
     def specific_sale(sale_id):
+        if not session.get('logged_in_admin'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
 
         sale = [sale for sale in sales if sale.get('sale_id') == sale_id]
 

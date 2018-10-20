@@ -1,5 +1,7 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, session
+from .auth import Users
 
+auth = Users()
 
 items_bp = Blueprint('items', __name__, url_prefix='/api/v1')
 
@@ -14,6 +16,11 @@ def index():
 class Items(object):
     @items_bp.route('/add_item', methods=["POST"])
     def add_items():
+        if not session.get('logged_in_admin'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
 
         if not request.is_json:
             return make_response(
@@ -90,6 +97,12 @@ class Items(object):
 
     @items_bp.route("/items", methods=["GET"])
     def items_all():
+        if not session.get('logged_in_admin') or not session.get('logged_in'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
+
         if len(items) == 0:
             return make_response(jsonify({
                 "status": "not found",
@@ -104,6 +117,11 @@ class Items(object):
 
     @items_bp.route('/items/<int:item_id>', methods=['GET'])
     def specific_item(item_id):
+        if not session.get('logged_in_admin') or not session.get('logged_in'):
+            return make_response(jsonify({
+                "status": "unauthorised",
+                "message": "Admin User must be logged in"
+            }), 401)
         if len(items) != 0:
             for item in items:
                 id = item.get('item_id')

@@ -2,7 +2,7 @@ import pytest
 from flask import json
 from app import create_app
 from app.api.v1.views.auth import Users
-from app.tests import add_items_helper
+from app.tests import sign_in_admin_helper, sign_in_helper, sign_up_helper
 
 testusers = Users()
 
@@ -82,13 +82,6 @@ sample_registration = [
             "username":"tester2",
             "password":"pass",
             "password2":"pass"
-            },
-            {
-            "name":"test",
-            "email":"test@mail.com",
-            "username":"tester2",
-            "password":"pass",
-            "password2":"pass"
             }
         ]
 
@@ -123,6 +116,9 @@ sample_login = [
             {
             "email":"test@adminmail.com",	
             "password":"pass"
+            },
+            {"email":"test@mail.com", 
+            "password":"pass"
             }
         ]
 
@@ -136,44 +132,50 @@ sample_login = [
 
     
 def test_login_empty_email():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[0], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[0], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_login_empty_password():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[1], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[1], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_login_wrong_email_format():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[2], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[2], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_login_wrong_email_format2():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[3], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[3], content_type = 'application/json')
     assert(response.status_code == 400)
 
 
 #CREDENTIALS CHECK
 
 def test_login_wrong_password():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[4], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[4], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_login_wrong_email():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = sample_login[5], content_type = 'application/json')
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = sample_login[5], content_type = 'application/json')
     assert(response.status_code == 400)
 
 
 #CORRECT CREDENTIALS
 
-def test_login_correct_data():
-    result = app.test_client()
-    response = result.post('/api/v1/login', data = json.dumps(sample_login[6]), content_type = 'application/json')
+def test_login_correct_data_admin():
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = json.dumps(sample_login[6]), content_type = 'application/json')
+    json.loads(response.data.decode('utf-8'))
+    assert(response.status_code == 200)
+
+def test_login_correct_data_user():
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', data = json.dumps(sample_login[7]), content_type = 'application/json')
     json.loads(response.data.decode('utf-8'))
     assert(response.status_code == 200)
 
@@ -182,65 +184,81 @@ def test_login_correct_data():
 
 #REGISTRATION TESTS
 
+def test_register_without_admin_logged_in():
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/register', data = sample_registration[9], content_type = 'application/json')
+    assert(response.status_code == 400)
+
+
 #USER INPUT CHECKS
   
 def test_register_empty_name():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[0], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[0], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_empty_email():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[1], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[1], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_empty_username():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[2], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[2], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_empty_password():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[3], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[3], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_empty_password2():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[4], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[4], content_type = 'application/json')
     assert(response.status_code == 400)
 
 
 #EMAIL FORMAT CHECKS
 
 def test_register_wrong_email_format():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[5], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[5], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_wrong_email_format1():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[6], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[6], content_type = 'application/json')
     assert(response.status_code == 400)
 
 
 #PASSWORD CHECK
 
 def test_register_passwords_matching():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[7], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[7], content_type = 'application/json')
     assert(response.status_code == 400)
 
 def test_register_passwords_matching1():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[8], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[8], content_type = 'application/json')
     assert(response.status_code == 400)
 
 
 #CORRECT INPUT
 
 def test_register_correct_data():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = json.dumps(sample_registration[9]), content_type = 'application/json')
+    test_client = app.test_client()
+    sign_in_admin_helper(test_client)
+    response = test_client.post('/api/v1/register', data = json.dumps(sample_registration[9]), content_type = 'application/json')
     json.loads(response.data.decode('utf-8'))
     assert (response.status_code == 201)
 
@@ -248,8 +266,9 @@ def test_register_correct_data():
 #DUPLICATE INPUT
 
 def test_register_duplicate_input():
-    result = app.test_client()
-    response = result.post('/api/v1/register', data = sample_registration[10], content_type = 'application/json')
+    test_client = app.test_client()
+    sign_up_helper(test_client)
+    response = test_client.post('/api/v1/register', data = sample_registration[9], content_type = 'application/json')
     assert (response.status_code == 400)
 
 '''-------------------------------------------------------------------------------------------------------------------------------'''
@@ -257,12 +276,13 @@ def test_register_duplicate_input():
 #LOGOUT TESTS
 
 def test_logout_without_logged_in():
-    result=app.test_client()
-    response= result.get('/api/v1/logout', content_type = 'application/json')
-    assert(response.status_code == 200)
+    test_client=app.test_client()
+    response= test_client.get('/api/v1/logout', content_type = 'application/json')
+    assert(response.status_code == 400)
 
 def test_logout_correctly():
-    result=app.test_client()
-    response= result.get('/api/v1/logout', content_type = 'application/json')
+    test_client=app.test_client()
+    sign_in_admin_helper(test_client)
+    response= test_client.get('/api/v1/logout', content_type = 'application/json')
     assert(response.status_code == 200)
 

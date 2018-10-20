@@ -47,6 +47,7 @@ def sign_up_helper(test_client):
     '''
     this is a helper function for an ordinary user's registration and login
     '''
+    sign_in_admin_helper(test_client)
     sign_up = test_client.post('/api/v1/register', data = json.dumps(sample_user[0]), content_type = 'application/json')
     assert (sign_up.status_code == 201)
     
@@ -68,6 +69,7 @@ def add_items_helper(test_client):
     '''
     this is a helper function for adding items
     '''
+    sign_in_admin_helper(test_client)
     add_item = test_client.post('/api/v1/add_item', data=json.dumps(sample_item[0]) ,content_type='application/json')
     assert(add_item.status_code==201)
     add_item = test_client.post('/api/v1/add_item', data=json.dumps(sample_item[1]) ,content_type='application/json')
@@ -77,6 +79,7 @@ def make_sale_helper(test_client):
     '''
     this is a helper function to make a sale
     '''
+    sign_in_helper(test_client)
     add_items_helper(test_client)
     sell = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
     assert(sell.status_code==201)

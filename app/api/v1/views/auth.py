@@ -85,9 +85,9 @@ class Users(object):
         
         if len(users) > 0:
             for user in users:
-                e = user.get('email')
+                user_email = user.get('email')
                 
-                if email == e:
+                if email == user_email:
                     return make_response(jsonify({"status":"not acceptable","messenge":"user already exists"}),406)
                 
                 else:

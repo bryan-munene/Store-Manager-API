@@ -18,6 +18,8 @@ def create_app(config):
     app.register_blueprint(sales_bp)
     from app.api.v1.views.items import items_bp
     app.register_blueprint(items_bp)
+    from app.api.v1.views.auth import users_bp
+    app.register_blueprint(users_bp)
     from app.api.v1 import v1
     app.register_blueprint(v1)
 

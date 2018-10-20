@@ -55,6 +55,7 @@ def sign_in_helper(test_client):
     '''
     this is a helper function for an ordinary user's login
     '''
+    sign_up_helper(test_client)
     sign_in = test_client.post('/api/v1/login', data = json.dumps(sample_user[1]), content_type = 'application/json')
     assert (sign_in.status_code == 200)
     
@@ -84,3 +85,5 @@ def make_sale_helper(test_client):
     sell = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
     assert(sell.status_code==201)
     
+def yield_test_client(test_client):
+    yield test_client

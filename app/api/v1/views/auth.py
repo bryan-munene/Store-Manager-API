@@ -73,3 +73,46 @@ class Users(object):
             password2 = data['password2']
 
         
+        if not password == password2:
+            return make_response(jsonify({"status":"not acceptable","messenge":"passwords don't match"}),406)
+
+        if name == "" or email == "" or username == "" or password == "" or password2 == "":
+            return make_response(jsonify({"status":"not acceptable","messenge":"Please fill all the required fields"}),406)
+       
+        if not re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", email, re.IGNORECASE):
+            return make_response(jsonify({"status":"not acceptable","messenge":"Email Provided is not in email format"}),406)
+       
+        
+        if len(users) > 0:
+            for user in users:
+                e = user.get('email')
+                
+                if email == e:
+                    return make_response(jsonify({"status":"not acceptable","messenge":"user already exists"}),406)
+                
+                else:
+                    user = {
+                        "user_id":user_id,
+                        "name":name,
+                        "email":email,   
+                        "username":username,
+                        "password":password,
+                        "admin":False
+                        }
+
+                     
+                    
+                   
+        else:
+            user = {
+                 "user_id":user_id,
+                 "name":name,
+                 "email":email,   
+                 "username":username,
+                 "password":password,
+                 "admin":False
+                 }
+
+        users.append(user)
+
+        return make_response(jsonify({"status":"created", "user":user, "users":users }),201)

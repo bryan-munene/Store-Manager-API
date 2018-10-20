@@ -97,7 +97,7 @@ class Items(object):
 
     @items_bp.route("/items", methods=["GET"])
     def items_all():
-        if not session.get('logged_in_admin') or not session.get('logged_in'):
+        if not session.get('logged_in_admin') and not session.get('logged_in'):
             return make_response(jsonify({
                 "status": "unauthorised",
                 "message": "Admin User must be logged in"
@@ -117,7 +117,7 @@ class Items(object):
 
     @items_bp.route('/items/<int:item_id>', methods=['GET'])
     def specific_item(item_id):
-        if not session.get('logged_in_admin') or not session.get('logged_in'):
+        if not session.get('logged_in_admin') and not session.get('logged_in'):
             return make_response(jsonify({
                 "status": "unauthorised",
                 "message": "Admin User must be logged in"

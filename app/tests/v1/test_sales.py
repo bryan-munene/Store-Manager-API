@@ -3,10 +3,12 @@ from flask import json
 from app import create_app
 from app.api.v1.views.items import Items
 from app.api.v1.views.sales import Sales
+from app.api.v1.views.auth import Users
 from app.tests import make_sale_helper, sign_in_admin_helper, sign_in_helper, add_items_helper, yield_test_client
 
 testitems = Items()
 testsales = Sales()
+testusers = Users()
 app = create_app(config="testing")
 
 #ORDER INPUT FOR TESTS
@@ -126,6 +128,7 @@ def test_sales_retrive_all_no_sale():
 def test_sales_retrive_all_successfully():
     test_client = app.test_client()
     make_sale_helper(test_client)
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales',content_type='application/json')
     assert(response.status_code==200)
     

@@ -172,7 +172,7 @@ class Sales(object):
                 "sales": sales
             }), 200)
 
-    @sales_bp.route('/orders/<int:sale_id>', methods=['GET'])
+    @sales_bp.route('/sales/<int:sale_id>', methods=['GET'])
     def specific_sale(sale_id):
         if not session.get('logged_in_admin'):
             return make_response(jsonify({

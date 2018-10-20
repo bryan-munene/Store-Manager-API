@@ -98,7 +98,7 @@ To run these tests, run the following command:
 
 ### Running all tests.
 
-These tests test the ``` Items Class, Sales Class, and the Users Class```
+    These tests test the ``` Items Class, Sales Class, and the Users Class```
 
 In the project's root directory, with the virtual environment running, run this command:
 
@@ -111,7 +111,7 @@ pytest
 
 It is possible to run test scripts individually. 
 
-``` cd ``` to your tests directory.
+    You need to ``` cd ``` to your tests directory.
 
 ```
 pytest test_users.py
@@ -151,7 +151,9 @@ This app contains multiple versions.
 
 # Documentation
 
-Coming soon...
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/9ba372bda1827df5c860)
+
+[Store Manger API Documentation](https://interstellar-rocket-8292.postman.co/collections/4618681-2aa39c47-820c-98aa-3a87-03b56f2499f9?workspace=722b7d17-923e-4874-823a-46bb72f18c73)
 
 ## Built With
 
@@ -161,10 +163,10 @@ Coming soon...
 
 ## Authors
 
-* - [Muthuri Munene Bryan](https://github.com/bryan-munene)
+*  [Muthuri Munene Bryan](https://github.com/bryan-munene)
 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details
 

@@ -3,7 +3,7 @@ from flask import json
 from app import create_app
 from app.api.v1.views.items import Items
 from app.api.v1.views.auth import Users
-from app.tests import make_sale_helper, sign_in_admin_helper, sign_in_helper, add_items_helper, yield_test_client
+from app.tests.test_helpers import make_sale_helper, sign_in_admin_helper, sign_in_helper, add_items_helper, yield_test_client
 
 testitems = Items()
 testusers = Users()

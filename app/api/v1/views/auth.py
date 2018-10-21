@@ -141,8 +141,8 @@ class Users(object):
                 "user_id": user_id,
                 "name": name,
                 "email": email,
-                "username": username,
-                "password": password,
+                "username": usrnm,
+                "password": pswrd,
                 "is_admin": False
             }
 

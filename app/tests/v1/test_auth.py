@@ -279,3 +279,21 @@ def test_logout_without_logged_in():
     test_client=app.test_client()
     response= test_client.get('/api/v1/logout', content_type = 'application/json')
     assert(response.status_code == 400)
+
+
+'''-------------------------------------------------------------------------------------------------------------------------------'''
+
+#GET ALL USERS TEST
+
+
+def test_users_retrive_all_no_admin_login():
+    test_client=app.test_client()
+    response= test_client.get('/api/v1/users',content_type='application/json')
+    assert(response.status_code==401)
+
+
+def test_users_retrive_all_successfully():
+    test_client=app.test_client()
+    sign_in_admin_helper(test_client)
+    response= test_client.get('/api/v1/users',content_type='application/json')
+    assert(response.status_code==200)

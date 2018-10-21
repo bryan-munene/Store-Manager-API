@@ -133,18 +133,19 @@ This app contains multiple versions.
 
 |    #   | Method | Endpoint                        | Description                           |
 |--------| ------ | ------------------------------- | ------------------------------------- |
-|    1   | GET    | /                               | Index/Welcome page                    |
+|    1   | GET    | /api/v1/                        | Index/Welcome page                    |
 |    2   | POST   | /api/v1/register                | Create new user                       |
 |    3   | POST   | /api/v1/login                   | Login a registered user               |
-|    4   | GET    | /api/v1/logout                  | Logout a logged in user               |
-|    5   | POST   | /api/v1/add_item                | Create a new item                     |
-|    6   | GET    | /api/v1/items                   | Retrieve all items                    |
-|    7   | GET    | /api/v1/items/<int:item_id>     | Retrieve a specific item by item id   |
-|    8   | DELETE | /api/v1/items/<int:item_id>     | Delete a specific item by item id     |
-|    9   | PUT    | /api/v1/items/<int:item_id>     | Update a specific item by item id     |
-|    10  | POST   | /api/v1/make_sale               | Make a sale                           |
-|    11  | GET    | /api/v1/sales                   | Retrieve all sales                    |
-|    12  | GET    | /api/v1/sales/<int:sale_id>     | Retrieve a specific sale              |
+|    4   | GET    | /api/v1/users                   | Retrieve all users                    |
+|    5   | GET    | /api/v1/logout                  | Logout a logged in user               |
+|    6   | POST   | /api/v1/add_item                | Create a new item                     |
+|    7   | GET    | /api/v1/items                   | Retrieve all items                    |
+|    8   | GET    | /api/v1/items/<int:item_id>     | Retrieve a specific item by item id   |
+|    9   | DELETE | /api/v1/items/<int:item_id>     | Delete a specific item by item id     |
+|    10  | PUT    | /api/v1/items/<int:item_id>     | Update a specific item by item id     |
+|    11  | POST   | /api/v1/make_sale               | Make a sale                           |
+|    12  | GET    | /api/v1/sales                   | Retrieve all sales                    |
+|    13  | GET    | /api/v1/sales/<int:sale_id>     | Retrieve a specific sale              |
 
 
 
@@ -163,7 +164,7 @@ This app contains multiple versions.
 
 ## Authors
 
-*  [Muthuri Munene Bryan](https://github.com/bryan-munene)
+* [Muthuri Munene Bryan](https://github.com/bryan-munene)
 
 
 ## License

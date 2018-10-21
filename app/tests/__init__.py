@@ -47,7 +47,6 @@ def sign_up_helper(test_client):
     '''
     this is a helper function for an ordinary user's registration and login
     '''
-    sign_in_admin_helper(test_client)
     sign_up = test_client.post('/api/v1/register', data = json.dumps(sample_user[0]), content_type = 'application/json')
     assert (sign_up.status_code == 201)
     
@@ -55,8 +54,6 @@ def sign_in_helper(test_client):
     '''
     this is a helper function for an ordinary user's login
     '''
-    sign_up = test_client.post('/api/v1/register', data = json.dumps(sample_user[0]), content_type = 'application/json')
-    assert (sign_up.status_code == 201)
     sign_in = test_client.post('/api/v1/login', data = json.dumps(sample_user[1]), content_type = 'application/json')
     assert (sign_in.status_code == 200)
     

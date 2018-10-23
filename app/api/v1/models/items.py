@@ -27,8 +27,7 @@ class ItemsModel():
                 id = item.get('item_id')
                 if id == item_id:
                     return item
-            else:
-                return False
+            
 
     def get_by_name_and_price(self, name, price):
         if len(items) > 0:

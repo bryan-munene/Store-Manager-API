@@ -50,8 +50,7 @@ class SalesModel():
                 if id == sale_id:
                     same_sale.append(sale_item)
             return same_sale
-        else:
-            return False
+        
 
     def get_sales_by_sale_id(self, sale_id):
         if len(sales) > 0:
@@ -59,7 +58,6 @@ class SalesModel():
                 id = sale.get('sale_id')
                 if id == sale_id:
                     return sale
-            else:
-                return False
+            
 
     

@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify, make_response, session
+from ..models.sales import SalesModel
+from ..models.items import ItemsModel
 
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/v1')
 
-sales = []
-sale_items = []
 
+items_model = ItemsModel()
+sales_model = SalesModel()
 
 class Sales(object):
     @sales_bp.route("/make_sale", methods=["POST"])
@@ -15,11 +17,10 @@ class Sales(object):
                     "status": "wrong format",
                     "message": "request not json"
                 }), 400)
-        else:
-            data = request.get_json()
-            sale_id = len(sales) + 1
-            payment_mode = data['payment_mode']
-            ordered_items = data['sale_items']
+    
+        data = request.get_json()
+        payment_mode = data['payment_mode']
+        ordered_items = data['sale_items']
 
         if payment_mode == "":
             return make_response(jsonify({
@@ -27,131 +28,99 @@ class Sales(object):
                 "message": "Please fill all the required fields"
             }), 406)
 
-        else:
-            if not len(ordered_items) == 0:
-                for ordered_item in ordered_items:
-                    item_id = ordered_item.get('item_id')
-                    quantity = ordered_item.get('quantity')
+    
+        if not len(ordered_items) == 0:
+            for ordered_item in ordered_items:
+                item_id = ordered_item.get('item_id')
+                quantity = ordered_item.get('quantity')
 
-                    sale_item_id = len(sale_items) + 1
+                
+                if quantity == "":
+                    return make_response(jsonify({
+                        "status": "not acceptable",
+                        "message": "Please fill all the required fields"
+                    }), 406)
 
-                    if quantity == "":
-                        return make_response(jsonify({
-                            "status": "not acceptable",
-                            "message": "Please fill all the required fields"
+                if item_id == "":
+                    return make_response(jsonify({
+                        "status": "not acceptable",
+                        "message": "Please fill all the required fields"
+                    }), 406)
+
+                if not quantity.isdigit():
+                    return make_response(jsonify({
+                        "status": "not acceptable",
+                        "message": "Quantity is not valid"
+                    }), 400)
+
+                if not item_id.isdigit():
+                    return make_response(jsonify({
+                        "status": "not acceptable",
+                        "message": "Food id is not valid"
+                    }), 400)
+
+                
+
+                item = items_model.get_by_id(item_id)
+                name = item.get('name')
+                price = item.get('price')
+                stock_level = item.get('quantity')
+
+                if not stock_level:
+                    return make_response(jsonify({
+                        "status": "not acceptable", 
+                        "message": "Stock levels not enough"
                         }), 406)
 
-                    if item_id == "":
-                        return make_response(jsonify({
-                            "status": "not acceptable",
-                            "message": "Please fill all the required fields"
+                if int(stock_level) > int(quantity):
+
+                    total = int(quantity) * int(price)
+
+                    sale_item = sales_model.add_sale_items(item_id, name, quantity, price, total)
+
+                    stock_level = int(stock_level) - int(quantity)
+
+                    item['quantity'] = stock_level
+                
+                else:
+                    return make_response(jsonify({
+                        "status": "not acceptable", 
+                        "message": "Stock levels not enough"
                         }), 406)
-
-                    if not quantity.isdigit():
-                        return make_response(jsonify({
-                            "status": "not acceptable",
-                            "message": "Quantity is not valid"
-                        }), 400)
-
-                    if not item_id.isdigit():
-                        return make_response(jsonify({
-                            "status": "not acceptable",
-                            "message": "Food id is not valid"
-                        }), 400)
-
+            
                     
+                
+                grand = 0
+                items = 0
+                sale_id = sales_model.sale_id
+                sale_items = sales_model.get_sale_items_by_sale_id(sale_id)
+                
+                for sale_item in sale_items:
+                    num = sale_item.get('quantity')
+                    total = sale_item.get('total')
+                    grand = grand + int(total)
+                    items = items + int(num)
 
-                    items = items_find.get_item()
-                    for item in items:
-                        
-                        id = item.get('item_id')
-                        
+            sale = sales_model.add_sales(payment_mode, grand, items)
+            sales = sales_model.get_all_sales()
 
-                        if int(id) == int(item_id):
-                            
-                            name = item.get('name')
-                            price = item.get('price')
-                            stock_level = item.get('quantity')
-
-                            if not stock_level:
-                                return make_response(jsonify({
-                                    "status": "not acceptable", 
-                                    "message": "Stock levels not enough"
-                                    }), 406)
-
-                            if int(stock_level) > int(quantity):
-
-                                total = int(quantity) * int(price)
-
-                                sale_item = {
-                                    "sale_item_id": sale_item_id,
-                                    "sale_id": sale_id,
-                                    "item_id": item_id,
-                                    "item_name": name,
-                                    "quantity": quantity,
-                                    "price": price,
-                                    "total": total
-                                }
-
-                                sale_items.append(sale_item)
-
-                                stock_level = int(stock_level) - int(quantity)
-
-                                item['quantity'] = stock_level
-                            
-                            else:
-                                return make_response(jsonify({
-                                    "status": "not acceptable", 
-                                    "message": "Stock levels not enough"
-                                    }), 406)
-                        
-                        else:
-                            return make_response(jsonify({
-                                "status": "not found", 
-                                "message": "Item was not found"
-                                }), 404)
-                    else:
-                        return make_response(jsonify({
-                            "status": "not found", 
-                            "message": "Item was not found"
-                            }), 404)
-
-
-                    grand = 0
-                    items = 0
-                    for sale_item in sale_items:
-                        id = sale_item.get('sale_id')
-
-                        if id == sale_id:
-                            num = sale_item.get('quantity')
-                            total = sale_item.get('total')
-                            grand = grand + int(total)
-                            items = items + int(num)
-
-                sale = {
-                    "sale_id": sale_id,
-                    "payment_mode": payment_mode,
-                    "grand_total": grand,
-                    "number_of_items": items
-                }
-
-                sales.append(sale)
-
-                return make_response(jsonify({
-                    "status": "created",
-                    "sales": sales,
-                    "sale_items": sale_items,
-                    "sale": sale
-                }), 201)
-            else:
-                return make_response(jsonify({
-                    "status": "not acceptable",
-                    "message": "You must order atleast one item"
-                }), 406)
+            return make_response(jsonify({
+                "status": "created",
+                "sales": sales,
+                "sale_items": sale_items,
+                "sale": sale
+            }), 201)
+        else:
+            return make_response(jsonify({
+                "status": "not acceptable",
+                "message": "You must order atleast one item"
+            }), 406)
 
     @sales_bp.route("/sales", methods=["GET"])
     def sales_all():
-        if len(sales) == 0:
+        sales = sales_model.get_all_sales()
+
+        if not sales:
             return make_response(jsonify({
                 "status": "not found",
                 "message": "sales don't exist"
@@ -165,9 +134,9 @@ class Sales(object):
 
     @sales_bp.route('/sales/<int:sale_id>', methods=['GET'])
     def specific_sale(sale_id):
-        sale = [sale for sale in sales if sale.get('sale_id') == sale_id]
+        sale = sales_model.get_sales_by_sale_id(sale_id)
 
-        if len(sale) == 0:
+        if not sale:
             return make_response(jsonify({
                 "status": "not found",
                 "message": "sale you are looking for does not exist"

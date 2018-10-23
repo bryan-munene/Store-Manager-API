@@ -15,12 +15,6 @@ sale_items = []
 class Sales(object):
     @sales_bp.route("/make_sale", methods=["POST"])
     def make_sale():
-        if not session.get('logged_in'):
-            return make_response(jsonify({
-                "status": "unauthorised",
-                "message": "Admin User must be logged in"
-            }), 401)
-
         if not request.is_json:
             return make_response(
                 jsonify({
@@ -163,12 +157,6 @@ class Sales(object):
 
     @sales_bp.route("/sales", methods=["GET"])
     def sales_all():
-        if not session.get('logged_in_admin'):
-            return make_response(jsonify({
-                "status": "unauthorised",
-                "message": "Admin User must be logged in"
-            }), 401)
-
         if len(sales) == 0:
             return make_response(jsonify({
                 "status": "not found",
@@ -183,12 +171,6 @@ class Sales(object):
 
     @sales_bp.route('/sales/<int:sale_id>', methods=['GET'])
     def specific_sale(sale_id):
-        if not session.get('logged_in_admin'):
-            return make_response(jsonify({
-                "status": "unauthorised",
-                "message": "Admin User must be logged in"
-            }), 401)
-
         sale = [sale for sale in sales if sale.get('sale_id') == sale_id]
 
         if len(sale) == 0:

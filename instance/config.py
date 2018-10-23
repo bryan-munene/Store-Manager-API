@@ -20,6 +20,7 @@ class TestingConfig(Config):
     SQL_DATABASE_URI = 'postgresql://localhost/test_db'
     DEBUG = True
 
+
 class StagingConfig(Config):
     """Configurations for Staging."""
     DEBUG = True

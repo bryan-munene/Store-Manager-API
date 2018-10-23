@@ -12,9 +12,10 @@ users = [{
 class UserModel():
     def __init__(self):
         self.users = users
+        self.user_id = len(self.users)+1
+        
 
     def add_user(self, name, email, usrnm, pswrd, is_admin):
-        self.user_id = len(self.users)+1
         self.password = generate_password_hash(pswrd, method='pbkdf2:sha256', salt_length=12)
 
         user = {

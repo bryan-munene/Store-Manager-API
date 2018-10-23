@@ -1,10 +1,4 @@
 from flask import Blueprint, request, jsonify, make_response, session
-from .items import gets
-from .auth import Users
-
-auth = Users()
-
-items_find = gets()
 
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/v1')
 

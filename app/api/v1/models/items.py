@@ -3,9 +3,10 @@ items = []
 class ItemsModel():
     def __init__(self):
         self.items = items
+        self.item_id = len(items)+1
+        
 
     def add_item(self, name, price, image, quantity):
-        self.item_id = len(items)+1
         item = {
             "item_id": self.item_id,
             "name": name,

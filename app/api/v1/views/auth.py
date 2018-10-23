@@ -60,7 +60,7 @@ class Users(object):
             user_email = user.get('email')
             user_password = user.get('password')
             user_role = user.get('is_admin')
-            if password == user_password and email == user_email and user_role == False:
+            if password == user_password and email == user_email and not user_role:
                 session['username'] = user.get('username')
                 session['logged_in'] = True
                 return Users.home()
@@ -92,17 +92,17 @@ class Users(object):
             user_id = len(users) + 1
             name = data['name']
             email = data['email']
-            username = data['username']
-            password = data['password']
-            password2 = data['password2']
+            usrnm = data['username']
+            pswrd = data['password']
+            pswrd2 = data['password2']
 
-        if not password == password2:
+        if not pswrd == pswrd2:
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "passwords don't match"
             }), 406)
 
-        if name == "" or email == "" or username == "" or password == "" or password2 == "":
+        if name == "" or email == "" or usrnm == "" or pswrd == "" or pswrd2 == "":
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "Please fill all the required fields"
@@ -131,8 +131,8 @@ class Users(object):
                         "user_id": user_id,
                         "name": name,
                         "email": email,
-                        "username": username,
-                        "password": password,
+                        "username": usrnm,
+                        "password": pswrd,
                         "is_admin": False
                     }
 
@@ -141,8 +141,8 @@ class Users(object):
                 "user_id": user_id,
                 "name": name,
                 "email": email,
-                "username": username,
-                "password": password,
+                "username": usrnm,
+                "password": pswrd,
                 "is_admin": False
             }
 
@@ -169,7 +169,6 @@ class Users(object):
                 "status": "okay",
                 "messenge": "user must be logged in"
             }), 400)
-
 
     @users_bp.route("/users", methods=["GET"])
     def users_all():

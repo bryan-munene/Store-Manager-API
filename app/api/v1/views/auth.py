@@ -119,3 +119,16 @@ class Users(object):
         users.append(user)
 
         return make_response(jsonify({"status":"created", "user":user, "users":users }),201)
+
+
+    @users_bp.route("/logout")
+    def logout():
+        if session.get('logged_in'):
+            session['logged_in'] = False
+            return Users.home()
+        elif session.get('logged_in_admin'):
+            session['logged_in_admin'] = False
+            return Users.home()
+        else:
+            return make_response(jsonify({"status":"okay","messenge":"logged out already"}),400)
+

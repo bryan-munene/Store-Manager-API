@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, session
-import re
 from ..models.auth import UserModel
+from app.api.v1.utility.validators import json_checker, blanks_login, blanks_reistration, email_checker
 
-from app.api.v1.utility.validators import json_checker
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/api/v1')
@@ -32,40 +31,48 @@ class Users(object):
 
     @users_bp.route("/login", methods=["POST"])
     def do_user_login():
-        json_checker(request)
+        ok = json_checker(request)
+        if not ok:
+            return make_response(jsonify({
+                "status": "wrong format",
+                "messenge": "request not json"
+            }), 400)
+
         data = request.get_json()
         email = data['email']
         password = data['password']
-    
-        if email == "" or password == "":
+        
+        filled = blanks_login(email, password)
+        if not filled:
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "Please fill all required fields"
             }), 406)
-
-        if not re.match(
-            "^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$",
-                email, re.IGNORECASE):
+        
+        Email = email_checker(email)
+        if not Email:
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "Email Provided is not in email format"
             }), 406)
-        users = user_model.get_all()
-        for user in users:
-            user_email = user.get('email')
+
+        user = user_model.get_user_by_email(email)
+        if user:
             user_password = user.get('password')
             user_role = user.get('is_admin')
-            if password == user_password and email == user_email and not user_role:
-                session['username'] = user.get('username')
-                session['logged_in'] = True
-                return Users.home()
-            elif password == user_password and email == user_email and user_role:
-                session['username'] = user.get('username')
-                session['logged_in_admin'] = True
-                return Users.home()
-            else:
-                session['logged_in'] = False
-                session['logged_in_admin'] = False
+        
+        credentials = user_model.check_password(user_password, password)
+        if credentials and not user_role:
+            session['username'] = user.get('username')
+            session['logged_in'] = True
+            return Users.home()
+        elif credentials and user_role:
+            session['username'] = user.get('username')
+            session['logged_in_admin'] = True
+            return Users.home()
+        else:
+            session['logged_in'] = False
+            session['logged_in_admin'] = False
 
         return Users.home()
 
@@ -77,19 +84,20 @@ class Users(object):
                 "message": "Admin User must be logged in"
             }), 401)
 
-        if not request.is_json:
+        ok = json_checker(request)
+        if not ok:
             return make_response(jsonify({
                 "status": "wrong format",
                 "messenge": "request not json"
             }), 400)
-        else:
-            data = request.get_json()
-            name = data['name']
-            email = data['email']
-            usrnm = data['username']
-            pswrd = data['password']
-            pswrd2 = data['password2']
-            is_admin = False
+        
+        data = request.get_json()
+        name = data['name']
+        email = data['email']
+        usrnm = data['username']
+        pswrd = data['password']
+        pswrd2 = data['password2']
+        is_admin = False
 
         if not pswrd == pswrd2:
             return make_response(jsonify({
@@ -97,46 +105,36 @@ class Users(object):
                 "messenge": "passwords don't match"
             }), 406)
 
-        if name == "" or email == "" or usrnm == "" or pswrd == "" or pswrd2 == "":
+        inputs = blanks_reistration(name, email, usrnm, pswrd, pswrd2)
+        if not inputs:
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "Please fill all the required fields"
             }), 406)
 
-        if not re.match(
-            "^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$",
-                email, re.IGNORECASE):
+        Email = email_checker(email)
+        if not Email:
             return make_response(jsonify({
                 "status": "not acceptable",
                 "messenge": "Email Provided is not in email format"
             }), 406)
-        
-        users = user_model.get_all()
-        if len(users) > 0:
-            for user in users:
-                user_email = user.get('email')
 
-                if email == user_email:
-                    return make_response(jsonify({
-                        "status": "not acceptable",
-                        "messenge": "user already exists"
-                    }), 406)
+        user = user_model.get_user_by_email(email)
+        if user:
+            return make_response(jsonify({
+                "status": "not acceptable",
+                "messenge": "user already exists"
+                }), 406)
 
-                else:
-                    user = user_model.add_user(name, email, usrnm, pswrd, is_admin)
-                    return make_response(jsonify({
-                        "status": "created",
-                        "user": user,
-                        "users": users
-                        }), 201)
+        else:
+            user = user_model.add_user(name, email, usrnm, pswrd, is_admin)
+            users = user_model.get_all()
+            return make_response(jsonify({
+                "status": "created",
+                "user": user,
+                "users": users
+                }), 201)
 
-        user = user_model.add_user(name, email, usrnm, pswrd, is_admin)
-        
-        return make_response(jsonify({
-            "status": "created",
-            "user": user,
-            "users": users
-        }), 201)
 
     @users_bp.route("/logout")
     def logout():

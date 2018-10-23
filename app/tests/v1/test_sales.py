@@ -3,10 +3,12 @@ from flask import json
 from app import create_app
 from app.api.v1.views.items import Items
 from app.api.v1.views.sales import Sales
-from app.tests import make_sale_helper
+from app.api.v1.views.auth import Users
+from app.tests import make_sale_helper, sign_in_admin_helper, sign_in_helper, add_items_helper, yield_test_client, sign_up_helper
 
 testitems = Items()
 testsales = Sales()
+testusers = Users()
 app = create_app(config="testing")
 
 #ORDER INPUT FOR TESTS
@@ -118,15 +120,19 @@ sample_sale=[{
 
 def test_sales_retrive_all_no_sale():
     test_client = app.test_client()
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales',content_type='application/json')
     assert(response.status_code==404)
+    
 
-'''
 def test_sales_retrive_all_successfully():
     test_client = app.test_client()
+    sign_up_helper(test_client)
     make_sale_helper(test_client)
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales',content_type='application/json')
-    assert(response.status_code==200)'''
+    assert(response.status_code==200)
+    
 '''-------------------------------------------------------------------------------------------------------------------------------'''
 
 #MAKE A SALE TESTS
@@ -134,48 +140,56 @@ def test_sales_retrive_all_successfully():
 
 def test_sales_quantity_not_digit():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[0]) ,content_type='application/json')
     assert(response.status_code==400)
     
 
 def test_sales_item_id_not_digit():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[1]) ,content_type='application/json')
     assert(response.status_code==400)
     
 
 def test_sales_item_id_empty():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[2]) ,content_type='application/json')
     assert(response.status_code==400)
     
 
 def test_sales_quantity_empty():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[3]) ,content_type='application/json')
     assert(response.status_code==400)
 
 
-'''def test_sales_quantity_more_than_available_stock():
+def test_sales_quantity_more_than_available_stock():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[4]) ,content_type='application/json')
     assert(response.status_code==400)
-     '''
+
 
 def test_sales_payment_method_empty():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[5]) ,content_type='application/json')
     assert(response.status_code==406)
     
 
 def test_sales_sale_items_empty():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[6]) ,content_type='application/json')
     assert(response.status_code==406)
     
 
 def test_place_sale_successfully():
     test_client = app.test_client()
+    sign_in_helper(test_client)
     response = test_client.post('/api/v1/make_sale', data=json.dumps(sample_sale[7]) ,content_type='application/json')
     json.loads(response.data)
     assert(response.status_code==201)
@@ -188,20 +202,23 @@ def test_place_sale_successfully():
 
 def test_get_sale_negative_identifier():
     test_client = app.test_client()
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales/-1' ,content_type='application/json')
     assert(response.status_code == 404)
 
 
 def test_get_sale_not_created():
     test_client = app.test_client()
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales/100' ,content_type='application/json')
     assert(response.status_code == 404)
-'''
+
 def test_get_sale_successfully():
     test_client = app.test_client()
     make_sale_helper(test_client)
+    sign_in_admin_helper(test_client)
     response = test_client.get('/api/v1/sales/1' ,content_type='application/json')
     assert(response.status_code == 200)
-'''
+
 '''-------------------------------------------------------------------------------------------------------------------------------'''
 

@@ -98,7 +98,7 @@ To run these tests, run the following command:
 
 ### Running all tests.
 
-These tests test the ``` Items Class, Sales Class, and the Users Class```
+    These tests test the ``` Items Class, Sales Class, and the Users Class```
 
 In the project's root directory, with the virtual environment running, run this command:
 
@@ -111,7 +111,7 @@ pytest
 
 It is possible to run test scripts individually. 
 
-``` cd ``` to your tests directory.
+    You need to ``` cd ``` to your tests directory.
 
 ```
 pytest test_users.py
@@ -133,25 +133,28 @@ This app contains multiple versions.
 
 |    #   | Method | Endpoint                        | Description                           |
 |--------| ------ | ------------------------------- | ------------------------------------- |
-|    1   | GET    | /                               | Index/Welcome page                    |
+|    1   | GET    | /api/v1/                        | Index/Welcome page                    |
 |    2   | POST   | /api/v1/register                | Create new user                       |
 |    3   | POST   | /api/v1/login                   | Login a registered user               |
-|    4   | GET    | /api/v1/logout                  | Logout a logged in user               |
-|    5   | POST   | /api/v1/add_item                | Create a new item                     |
-|    6   | GET    | /api/v1/items                   | Retrieve all items                    |
-|    7   | GET    | /api/v1/items/<int:item_id>     | Retrieve a specific item by item id   |
-|    8   | DELETE | /api/v1/items/<int:item_id>     | Delete a specific item by item id     |
-|    9   | PUT    | /api/v1/items/<int:item_id>     | Update a specific item by item id     |
-|    10  | POST   | /api/v1/make_sale               | Make a sale                           |
-|    11  | GET    | /api/v1/sales                   | Retrieve all sales                    |
-|    12  | GET    | /api/v1/sales/<int:sale_id>     | Retrieve a specific sale              |
+|    4   | GET    | /api/v1/users                   | Retrieve all users                    |
+|    5   | GET    | /api/v1/logout                  | Logout a logged in user               |
+|    6   | POST   | /api/v1/add_item                | Create a new item                     |
+|    7   | GET    | /api/v1/items                   | Retrieve all items                    |
+|    8   | GET    | /api/v1/items/<int:item_id>     | Retrieve a specific item by item id   |
+|    9   | DELETE | /api/v1/items/<int:item_id>     | Delete a specific item by item id     |
+|    10  | PUT    | /api/v1/items/<int:item_id>     | Update a specific item by item id     |
+|    11  | POST   | /api/v1/make_sale               | Make a sale                           |
+|    12  | GET    | /api/v1/sales                   | Retrieve all sales                    |
+|    13  | GET    | /api/v1/sales/<int:sale_id>     | Retrieve a specific sale              |
 
 
 
 
 # Documentation
 
-Coming soon...
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/9ba372bda1827df5c860)
+
+[Store Manger API Documentation](https://interstellar-rocket-8292.postman.co/collections/4618681-2aa39c47-820c-98aa-3a87-03b56f2499f9?workspace=722b7d17-923e-4874-823a-46bb72f18c73)
 
 ## Built With
 
@@ -161,10 +164,10 @@ Coming soon...
 
 ## Authors
 
-* - [Muthuri Munene Bryan](https://github.com/bryan-munene)
+* [Muthuri Munene Bryan](https://github.com/bryan-munene)
 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details
 

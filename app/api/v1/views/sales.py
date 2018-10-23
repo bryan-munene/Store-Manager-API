@@ -48,13 +48,13 @@ class Sales(object):
                     sale_item_id = len(sale_items) + 1
 
                     if quantity == "":
-                        make_response(jsonify({
+                        return make_response(jsonify({
                             "status": "not acceptable",
                             "message": "Please fill all the required fields"
                         }), 406)
 
                     if item_id == "":
-                        make_response(jsonify({
+                        return make_response(jsonify({
                             "status": "not acceptable",
                             "message": "Please fill all the required fields"
                         }), 406)
@@ -71,27 +71,25 @@ class Sales(object):
                             "message": "Food id is not valid"
                         }), 400)
 
-                    '''
-                    for item in items:
-                        name = item.get('name')
-                        price = item.get('price')
-                    '''
+                    
 
                     items = items_find.get_item()
                     for item in items:
-                        # return make_response(jsonify({"status":"ok",
-                        # "item":item}),200)
-
+                        
                         id = item.get('item_id')
                         
 
                         if int(id) == int(item_id):
-                            # return make_response(jsonify({"status":"ok",
-                            # "item":item, "item_id":item_id, "id":id}),200)
-
+                            
                             name = item.get('name')
                             price = item.get('price')
                             stock_level = item.get('quantity')
+
+                            if not stock_level:
+                                return make_response(jsonify({
+                                    "status": "not acceptable", 
+                                    "message": "Stock levels not enough"
+                                    }), 406)
 
                             if int(stock_level) > int(quantity):
 
@@ -118,6 +116,17 @@ class Sales(object):
                                     "status": "not acceptable", 
                                     "message": "Stock levels not enough"
                                     }), 406)
+                        
+                        else:
+                            return make_response(jsonify({
+                                "status": "not found", 
+                                "message": "Item was not found"
+                                }), 404)
+                    else:
+                        return make_response(jsonify({
+                            "status": "not found", 
+                            "message": "Item was not found"
+                            }), 404)
 
 
                     grand = 0

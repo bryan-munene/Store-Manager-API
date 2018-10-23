@@ -1,19 +1,13 @@
 from flask import Blueprint, request, jsonify, make_response, session
 import re
+from ..models.auth import UserModel
+
+from app.api.v1.utility.validators import json_checker
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/api/v1')
 
-
-users = [{
-    "is_admin": True,
-    "email": "test@adminmail.com",
-    "name": "test",
-    "password": "pass",
-    "user_id": 1,
-    "username": "tester"
-}]
-
+user_model = UserModel()
 
 class Users(object):
     @users_bp.route("/login")
@@ -38,10 +32,11 @@ class Users(object):
 
     @users_bp.route("/login", methods=["POST"])
     def do_user_login():
+        json_checker(request)
         data = request.get_json()
         email = data['email']
         password = data['password']
-
+    
         if email == "" or password == "":
             return make_response(jsonify({
                 "status": "not acceptable",
@@ -55,7 +50,7 @@ class Users(object):
                 "status": "not acceptable",
                 "messenge": "Email Provided is not in email format"
             }), 406)
-
+        users = user_model.get_all()
         for user in users:
             user_email = user.get('email')
             user_password = user.get('password')
@@ -89,12 +84,12 @@ class Users(object):
             }), 400)
         else:
             data = request.get_json()
-            user_id = len(users) + 1
             name = data['name']
             email = data['email']
             usrnm = data['username']
             pswrd = data['password']
             pswrd2 = data['password2']
+            is_admin = False
 
         if not pswrd == pswrd2:
             return make_response(jsonify({
@@ -115,7 +110,8 @@ class Users(object):
                 "status": "not acceptable",
                 "messenge": "Email Provided is not in email format"
             }), 406)
-
+        
+        users = user_model.get_all()
         if len(users) > 0:
             for user in users:
                 user_email = user.get('email')
@@ -127,27 +123,15 @@ class Users(object):
                     }), 406)
 
                 else:
-                    user = {
-                        "user_id": user_id,
-                        "name": name,
-                        "email": email,
-                        "username": usrnm,
-                        "password": pswrd,
-                        "is_admin": False
-                    }
+                    user = user_model.add_user(name, email, usrnm, pswrd, is_admin)
+                    return make_response(jsonify({
+                        "status": "created",
+                        "user": user,
+                        "users": users
+                        }), 201)
 
-        else:
-            user = {
-                "user_id": user_id,
-                "name": name,
-                "email": email,
-                "username": usrnm,
-                "password": pswrd,
-                "is_admin": False
-            }
-
-        users.append(user)
-
+        user = user_model.add_user(name, email, usrnm, pswrd, is_admin)
+        
         return make_response(jsonify({
             "status": "created",
             "user": user,
@@ -177,7 +161,7 @@ class Users(object):
                 "status": "unauthorised",
                 "message": "Admin User must be logged in"
             }), 401)
-
+        users = user_model.get_all()
         if len(users) == 0:
             return make_response(jsonify({
                 "status": "not found",

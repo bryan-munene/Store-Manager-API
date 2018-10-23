@@ -1,11 +1,17 @@
 from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api
-
 
 
 items_bp = Blueprint('items', __name__, url_prefix='/api/v1')
+
+
 items = []
+
+
 class Items(object):
+    @items_bp.route("/")
+    def index():
+        return jsonify(200,"WELCOME. You are here.")
+
     @items_bp.route('/add_item', methods=["POST"])
     def add_items():
         
@@ -79,13 +85,19 @@ class Items(object):
         if len(items) != 0:
             for item in items:
                 id = item.get('item_id')
-                if id == item_id:
-                    return make_response(jsonify({"status":"ok", "items":items}),200)
-                else:
-                    return make_response(jsonify({'error':'the item does not exist'}),404)
+                while id == item_id:
+                    return make_response(jsonify({"status":"ok", "item":item}),200)
+            else:
+                return make_response(jsonify({'error':'the item does not exist'}),404)
 
         
 
         else:
             return make_response(jsonify({'error':'the item does not exist'}),404)
 
+    
+class gets(object):
+    def get_item(self):        
+        return items
+        
+            

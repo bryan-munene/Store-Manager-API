@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
-from flask_restful import Resource, Api
-from .items import items
+from .items import gets
+
+items_find = gets()
 
 sales_bp = Blueprint('sales', __name__,url_prefix='/api/v1')
 
@@ -30,37 +31,53 @@ class Sales(object):
         else:
             if not len(ordered_items) == 0:
                 for ordered_item in ordered_items:
-                    item_name = ordered_item.get('item_name')
+                    item_id = ordered_item.get('item_id')
                     quantity = ordered_item.get('quantity')
                     
                     sale_item_id =  len(sale_items)+1
                     
                     if quantity == "":
                         make_response(jsonify({"status":"not acceptable", "message":"Please fill all the required fields"}),406)
-                    if item_name == "":
+                    if item_id == "":
                         make_response(jsonify({"status":"not acceptable", "message":"Please fill all the required fields"}),406)
                     
                     if not quantity.isdigit():
                         return make_response(jsonify({"status":"not acceptable", "message":"Quantity is not valid"}),400)
-                    if not item_name.isalpha():
-                        return make_response(jsonify({"status":"not acceptable", "message":"Food name is not valid"}),400)
+                    if not item_id.isdigit():
+                        return make_response(jsonify({"status":"not acceptable", "message":"Food id is not valid"}),400)
                         
 
+                    '''     
                     for item in items:
                         name = item.get('name')
                         price = item.get('price')
-
-                        if item_name == name:
+                    '''
+                    
+                    items = items_find.get_item()
+                    for item in items:
+                        #return make_response(jsonify({"status":"ok", "item":item}),200)
+                        
+                        id = item.get('item_id')
+                        #return make_response(jsonify({"status":"ok", "item":item_id}),200)
+                        
+                        if not id == int(item_id):
+                            #return make_response(jsonify({"status":"ok", "item":item, "item_id":item_id, "id":id}),200)
+                        
+                            name = item.get('name')
+                            price = item.get('price')
+                            
                             total = int(quantity) * int(price)
+
                             sale_item = {
                                 "sale_item_id":sale_item_id,
                                 "sale_id":sale_id,
-                                "item_name":item_name,
+                                "item_id":item_id,
+                                "item_name":name,
                                 "quantity":quantity,
                                 "price":price,
                                 "total":total
                                 }
-                            
+                    
 
                             sale_items.append(sale_item)
 
@@ -84,7 +101,7 @@ class Sales(object):
 
                 sales.append(sale)           
 
-                return make_response(jsonify({"status":"created", "sales":sales, "sale_items":sale_items, "sale":sale, "sale_item":sale_item}),201)
+                return make_response(jsonify({"status":"created", "sales":sales, "sale_items":sale_items, "sale":sale}),201)
             else:
                 return make_response(jsonify({"status":"not acceptable", "message":"You must order atleast one item"}),406)
 

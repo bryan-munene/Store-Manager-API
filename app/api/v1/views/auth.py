@@ -31,7 +31,7 @@ class Users(object):
         email = data['email']
         password = data['password']
 
-
+    
         if email == "" or password == "":
             return make_response(jsonify({"status":"not acceptable","messenge":"Please fill all the required fields"}),406)
        
@@ -44,8 +44,11 @@ class Users(object):
             user_email = user.get('email')
             user_password = user.get('password')
             user_role = user.get('is_admin')
-           
-            if password == user_password and email == user_email and user_role == True:
+            if password == user_password and email == user_email and user_role == False:
+                session['username'] = user.get('username')
+                session['logged_in'] = True 
+                return Users.home()
+            elif password == user_password and email == user_email and user_role == True:
                 session['username'] = user.get('username')
                 session['logged_in_admin'] = True
                 return Users.home()

@@ -6,12 +6,12 @@ items_bp = Blueprint('items', __name__, url_prefix='/api/v1')
 
 items = []
 
+@items_bp.route("/")
+def index():
+    return jsonify(200, "WELCOME. You are here.")
+
 
 class Items(object):
-    @items_bp.route("/")
-    def index():
-        return jsonify(200, "WELCOME. You are here.")
-
     @items_bp.route('/add_item', methods=["POST"])
     def add_items():
 

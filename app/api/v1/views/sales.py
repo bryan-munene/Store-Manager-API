@@ -8,7 +8,7 @@ sale_items = []
 
 
 class Sales(object):
-    @sales_bp.route("/api/v1/place_order", methods=["POST"])
+    @sales_bp.route("/make_sale", methods=["POST"])
     def make_sale():
         
         if not request.is_json:
@@ -88,3 +88,15 @@ class Sales(object):
                 return make_response(jsonify({"status":"created", "sales":sales, "sale_items":sale_items, "sale":sale, "sale_item":sale_item}),201)
             else:
                 return make_response(jsonify({"status":"not acceptable", "message":"You must order atleast one item"}),406)
+
+
+    @sales_bp.route("/sales", methods=["GET"])
+    def sales_all():
+        
+        if len(sales) == 0:
+            return make_response(jsonify({"status":"not found","message":"sales don't exist"}),404)
+                   
+        else:
+            return make_response(jsonify({"status":"ok", "sales":sales}),200)
+        
+

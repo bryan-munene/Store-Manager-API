@@ -69,15 +69,25 @@ class Sales(object):
                                                 
                 else:
                     for item in items:
-                        name = item.get('name')
-                        price = item.get('price')
-                        stock_level = item.get('quantity')
+                        id = item.get('item_id')
+                        if id and id == item_id:
+                            name = item.get('name')
+                            price = item.get('price')
+                            stock_level = item.get('quantity')
+
+                        else:
+                            return make_response(jsonify({
+                                "status": "not found", 
+                                "message": "Item not available"
+                            }), 404)
+                        
                         if not stock_level:
                             return make_response(jsonify({
-                                "status": "not acceptable", 
-                                "message": "Item not available"
+                            "status": "not acceptable", 
+                            "message": "Item not available"
                             }), 406)
                         else:
+
                             if int(stock_level) < int(quantity) :
                                 return make_response(jsonify({
                                         "status": "not acceptable", 
@@ -86,13 +96,9 @@ class Sales(object):
                                 
                             else:
                                 total = int(quantity) * int(price)
-                                sale_item = sales_model.add_sale_items(item_id, name, quantity, price, total)
+                                sales_model.add_sale_items(item_id, name, quantity, price, total)
                                 stock_level = int(stock_level) - int(quantity)
                                 item['quantity'] = stock_level
-                                                
-                    
-                    
-                        
                 
                 grand = 0
                 items = 0

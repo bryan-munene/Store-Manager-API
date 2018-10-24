@@ -5,10 +5,11 @@ class SalesModel():
     def __init__(self):
         self.sale_items = sale_items
         self.sales = sales
+        
+    def add_sale_items(self, item_id, name, quantity, price, total):
         self.sale_item_id = len(sale_items)+1
         self.sale_id = len(sales)+1
-
-    def add_sale_items(self, item_id, name, quantity, price, total):
+        
         sale_item = {
             "sale_item_id": self.sale_item_id,
             "sale_id": self.sale_id,
@@ -19,11 +20,12 @@ class SalesModel():
             "total": total
             }
 
-        self.sale_items.append(sale_item)
+        sale_items.append(sale_item)
 
         return sale_item
 
     def add_sales(self, payment_mode, grand, items):
+        self.sale_id = len(sales)+1
         sale = {
             "sale_id": self.sale_id,
             "payment_mode": payment_mode,

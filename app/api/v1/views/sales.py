@@ -58,48 +58,44 @@ class Sales(object):
                         "message": "Item id is not valid"
                     }), 400)
 
-                
+                item_id = int(item_id)
                 items_model = ItemsModel()
-                items = items_model.get_all()
-                if not items:
+                item = items_model.get_by_id(item_id)
+                print(item)
+                if not item:
                     return make_response(jsonify({
                         "status": "not found", 
                         "message": "no items"
                         }), 404)
                                                 
-                else:
-                    for item in items:
-                        id = item.get('item_id')
-                        if id and id == item_id:
-                            name = item.get('name')
-                            price = item.get('price')
-                            stock_level = item.get('quantity')
-
-                        else:
-                            return make_response(jsonify({
-                                "status": "not found", 
-                                "message": "Item not available"
-                            }), 404)
-                        
-                        if not stock_level:
-                            return make_response(jsonify({
-                            "status": "not acceptable", 
-                            "message": "Item not available"
-                            }), 406)
-                        else:
-
-                            if int(stock_level) < int(quantity) :
-                                return make_response(jsonify({
-                                        "status": "not acceptable", 
-                                        "message": " we've run out of stock"
-                                    }), 406)
-                                
-                            else:
-                                total = int(quantity) * int(price)
-                                sales_model.add_sale_items(item_id, name, quantity, price, total)
-                                stock_level = int(stock_level) - int(quantity)
-                                item['quantity'] = stock_level
                 
+                name = item.get('name')
+                price = item.get('price')
+                stock_level = item.get('quantity')
+                print (id, item_id)
+                        
+                        
+                if not stock_level:
+                    return make_response(jsonify({
+                    "status": "not acceptable", 
+                    "message": "Item not available"
+                    }), 406)
+            
+                if int(stock_level) < int(quantity) :
+                    return make_response(jsonify({
+                            "status": "not acceptable", 
+                            "message": " we've run out of stock"
+                        }), 406)
+                    
+                else:
+                    total = int(quantity) * int(price)
+                    sales_model.add_sale_items(item_id, name, quantity, price, total)
+                    stock_level = int(stock_level) - int(quantity)
+                    item['quantity'] = stock_level
+    
+                        
+                           
+                        
                 grand = 0
                 items = 0
                 sale_id = sales_model.sale_id

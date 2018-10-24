@@ -5,6 +5,7 @@ class SalesModel():
     def __init__(self):
         self.sale_items = sale_items
         self.sales = sales
+        self.sale_id = len(sales)
         
     def add_sale_items(self, item_id, name, quantity, price, total):
         self.sale_item_id = len(sale_items)+1

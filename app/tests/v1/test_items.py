@@ -21,7 +21,7 @@ sample_item=[
     {"name":"Panadol", "price":"200",	"image":"", "quantity":"12"},
     {"name":"Panadol", "price":"200",	"image":"image", "quantity":"abc"},
     {"name":"Panadol", "price":"200",	"image":"image", "quantity":"-12"},
-    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"12"}
+    {"name":"Panadol", "price":"250",	"image":"image", "quantity":"12"}
 ]
 
 
@@ -51,7 +51,6 @@ sample_item_updates=[
 
 def test_items_retrive_all_no_item():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.get('/api/v1/items',content_type='application/json')
     assert(response.status_code==404)
 
@@ -59,7 +58,6 @@ def test_items_retrive_all_no_item():
 def test_items_retrive_all_successfully():
     test_client=app.test_client()
     add_items_helper(test_client)
-    sign_in_admin_helper(test_client)
     response= test_client.get('/api/v1/items',content_type='application/json')
     assert(response.status_code==200)
 
@@ -70,55 +68,46 @@ def test_items_retrive_all_successfully():
 
 def test_items_price_not_digit():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[0] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_price_not_digit1():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[1] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_item_name_not_str():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[2] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_item_name_empty():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[3] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_price_empty():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[4] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_image_empty():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[5] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_quantity_not_digit():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[6] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_quantity_not_digit1():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=sample_item[7] ,content_type='application/json')
     assert(response.status_code==400)
 
 def test_items_successfully():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
     response= test_client.post('/api/v1/add_item', data=json.dumps(sample_item[8]) ,content_type='application/json')
     json.loads(response.data)
     assert(response.status_code==201)
@@ -130,22 +119,16 @@ def test_items_successfully():
 
 def test_get_item_negative_identifier():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
-    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/-1' ,content_type='application/json')
     assert(response.status_code == 404)
 
 def test_get_item_not_created():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
-    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/100' ,content_type='application/json')
     assert(response.status_code == 404)
 
 def test_get_item_successfully():
     test_client=app.test_client()
-    sign_in_admin_helper(test_client)
-    #add_items_helper(test_client)
     response= test_client.get('/api/v1/items/1' ,content_type='application/json')
     assert(response.status_code == 200)
 

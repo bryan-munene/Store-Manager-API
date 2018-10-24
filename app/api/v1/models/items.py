@@ -37,3 +37,4 @@ class ItemsModel():
 
                 if name == item_name and price == item_price:
                     return item
+                    

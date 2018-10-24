@@ -60,7 +60,9 @@ class Users(object):
         if user:
             user_password = user.get('password')
             user_role = user.get('is_admin')
-        
+        else:
+            pass
+
         credentials = user_model.check_password(user_password, password)
         if credentials and not user_role:
             session['username'] = user.get('username')
@@ -160,7 +162,7 @@ class Users(object):
                 "message": "Admin User must be logged in"
             }), 401)
         users = user_model.get_all()
-        if len(users) == 0:
+        if not users:
             return make_response(jsonify({
                 "status": "not found",
                 "message": "users you are looking for do not esxist"

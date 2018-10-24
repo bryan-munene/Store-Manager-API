@@ -5,7 +5,6 @@ from ..models.items import ItemsModel
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/v1')
 
 
-items_model = ItemsModel()
 sales_model = SalesModel()
 
 class Sales(object):
@@ -56,39 +55,44 @@ class Sales(object):
                 if not item_id.isdigit():
                     return make_response(jsonify({
                         "status": "not acceptable",
-                        "message": "Food id is not valid"
+                        "message": "Item id is not valid"
                     }), 400)
 
                 
-
-                item = items_model.get_by_id(item_id)
-                name = item.get('name')
-                price = item.get('price')
-                stock_level = item.get('quantity')
-
-                if not stock_level:
+                items_model = ItemsModel()
+                items = items_model.get_all()
+                if not items:
                     return make_response(jsonify({
-                        "status": "not acceptable", 
-                        "message": "Stock levels not enough"
-                        }), 406)
-
-                if int(stock_level) > int(quantity):
-
-                    total = int(quantity) * int(price)
-
-                    sale_item = sales_model.add_sale_items(item_id, name, quantity, price, total)
-
-                    stock_level = int(stock_level) - int(quantity)
-
-                    item['quantity'] = stock_level
-                
+                        "status": "not found", 
+                        "message": "no items"
+                        }), 404)
+                                                
                 else:
-                    return make_response(jsonify({
-                        "status": "not acceptable", 
-                        "message": "Stock levels not enough"
-                        }), 406)
-            
+                    for item in items:
+                        name = item.get('name')
+                        price = item.get('price')
+                        stock_level = item.get('quantity')
+                        if not stock_level:
+                            return make_response(jsonify({
+                                "status": "not acceptable", 
+                                "message": "Item not available"
+                            }), 406)
+                        else:
+                            if int(stock_level) < int(quantity) :
+                                return make_response(jsonify({
+                                        "status": "not acceptable", 
+                                        "message": " we've run out of stock"
+                                    }), 406)
+                                
+                            else:
+                                total = int(quantity) * int(price)
+                                sale_item = sales_model.add_sale_items(item_id, name, quantity, price, total)
+                                stock_level = int(stock_level) - int(quantity)
+                                item['quantity'] = stock_level
+                                                
                     
+                    
+                        
                 
                 grand = 0
                 items = 0

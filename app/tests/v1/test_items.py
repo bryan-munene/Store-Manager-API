@@ -21,7 +21,7 @@ sample_item=[
     {"name":"Panadol", "price":"200",	"image":"", "quantity":"12"},
     {"name":"Panadol", "price":"200",	"image":"image", "quantity":"abc"},
     {"name":"Panadol", "price":"200",	"image":"image", "quantity":"-12"},
-    {"name":"Panadol", "price":"200",	"image":"image", "quantity":"12"}
+    {"name":"Panadol", "price":"250",	"image":"image", "quantity":"12"}
 ]
 
 

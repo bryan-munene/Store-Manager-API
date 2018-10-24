@@ -61,7 +61,6 @@ class Sales(object):
                 item_id = int(item_id)
                 items_model = ItemsModel()
                 item = items_model.get_by_id(item_id)
-                print(item)
                 if not item:
                     return make_response(jsonify({
                         "status": "not found", 

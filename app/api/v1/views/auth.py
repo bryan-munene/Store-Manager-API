@@ -61,7 +61,10 @@ class Users(object):
             user_password = user.get('password')
             user_role = user.get('is_admin')
         else:
-            pass
+            return make_response(jsonify({
+                "status": "not found",
+                "messenge": "User does not exist"
+            }), 404)
 
         credentials = user_model.check_password(user_password, password)
         if credentials and not user_role:

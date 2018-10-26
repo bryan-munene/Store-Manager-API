@@ -53,6 +53,8 @@ class Users(object):
         '''exp = datetime.timedelta(minutes=15)
 '''
         if credentials and not user_role:
+            session['user_id'] = user.get('user_id')
+            session['logged_in'] = True
             token = create_access_token(user['email'])
             return make_response(jsonify({
                 "status": "user logged in",
@@ -63,6 +65,8 @@ class Users(object):
 
         elif credentials and user_role:
             token = create_access_token(user['email'])
+            session['user_id'] = user.get('user_id')
+            session['logged_in_admin'] = True
             return make_response(jsonify({
                 "status": "Admin logged in",
                 "username": user['username'],

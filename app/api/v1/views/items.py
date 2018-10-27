@@ -39,14 +39,14 @@ class Items(object):
                 jsonify({
                     "status": "not acceptable",
                     "message": "price not valid"
-                }), 405)
+                }), 400)
 
         if not name.isalpha():
             return make_response(
                 jsonify({
                     "status": "not acceptable",
                     "message": "item name not valid"
-                }), 405)
+                }), 400)
 
         item = items_model.get_by_name_and_price(name, price)
         if item:

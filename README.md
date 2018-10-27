@@ -152,7 +152,7 @@ This app contains multiple versions.
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/9ba372bda1827df5c860)
 
-[Store Manger API Documentation](https://interstellar-rocket-8292.postman.co/collections/4618681-2aa39c47-820c-98aa-3a87-03b56f2499f9?workspace=722b7d17-923e-4874-823a-46bb72f18c73)
+[Store Manger API Documentation](https://documenter.getpostman.com/view/4618681/RzZ1r3cR)
 
 
 

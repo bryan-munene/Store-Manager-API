@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, session
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
-from datetime import datetime
+import datetime
 
 from ..models.auth import UserModel
 from app.api.v1.utility.validators import json_checker, blanks_login, blanks_reistration, email_checker
@@ -50,12 +50,12 @@ class Users(object):
             }), 404)
 
         credentials = user_model.check_password(user_password, password)
-        '''exp = datetime.timedelta(minutes=15)
-'''
+        exp = datetime.timedelta(minutes=15)
+
         if credentials and not user_role:
             session['user_id'] = user.get('user_id')
             session['logged_in'] = True
-            token = create_access_token(user['email'])
+            token = create_access_token(user['user_id'], exp)
             return make_response(jsonify({
                 "status": "user logged in",
                 "username": user['username'],
@@ -64,7 +64,7 @@ class Users(object):
                 }), 200)
 
         elif credentials and user_role:
-            token = create_access_token(user['email'])
+            token = create_access_token(user['user_id'], exp)
             session['user_id'] = user.get('user_id')
             session['logged_in_admin'] = True
             return make_response(jsonify({
